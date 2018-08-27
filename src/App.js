@@ -3,42 +3,77 @@ import './App.css';
 
 let list = [
   {
-    id:1,
-    name: 'John Lennon'
+    id: 1,
+    name: 'John Lennon',
+    votes: 0
   },
 
   {
-    id:2,
-    name: 'Paul McCartney'
+    id: 2,
+    name: 'Paul McCartney',
+    votes: 0
   },
-  
+
   {
-    id:3,
-    name: 'George Harrison'
+    id: 3,
+    name: 'George Harrison',
+    votes: 0
   },
-  
+
   {
-    id:4,
-    name: 'Ringo Starr'
+    id: 4,
+    name: 'Ringo Starr',
+    votes: 0
   },
 ]
 
 class App extends Component {
-  handleEvent = () => console.log('button clicked');
-  
+  state = {
+    members: []
+
+  };
+
+  componentDidMount() {
+    this.setState({ members: list });
+  }
+
+  handleEvent = memberId => {
+    const updatedList = this.state.members.map(member => {
+      if (member.id === memberId) {
+        return Object.assign({}, member, {
+          votes: member.votes + 1
+        });
+      } else {
+        return member;
+      }
+    });
+
+
+
+
+
+    this.setState({
+      members: updatedList
+    });
+  };
+
+
+
+
   render() {
-    return  list.map(member =>
-    <Beatle key={member.id} name={member.name} onVote={this.handleEvent}/>);
+    return this.state.members.map(member =>
+      <Beatle key={member.id} id={member.id} name={member.name} votes={member.votes} onVote={this.handleEvent} />
+    );
   }
 }
 
 class Beatle extends Component {
-  handleClick = () => this.props.onVote();
-   
+  handleClick = () => this.props.onVote(this.props.id);
+
   render() {
     return (
       <div className="App">
-       {this.props.name} <button onClick={this.handleClick}>+</button>
+        {this.props.name} <button onClick={this.handleClick}>+</button> {this.props.votes}
       </div>
     );
   }
